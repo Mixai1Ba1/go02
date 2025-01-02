@@ -15,27 +15,27 @@ type Cache interface {
 	Delete(key string) error
 }
 
-// SimpleCache — простая реализация интерфейса Cache с использованием map.
-type SimpleCache struct {
-	data map[string]string
+// simpleCache — простая реализация интерфейса Cache с использованием map.
+type simpleCache struct {
+	storage map[string]string
 }
 
-// NewSimpleCache — создаёт новый экземпляр SimpleCache.
-func NewSimpleCache() *SimpleCache {
-	return &SimpleCache{
-		data: make(map[string]string),
+// NewCache — создаёт новый экземпляр simpleCache.
+func NewCache() Cache {
+	return &simpleCache{
+		storage: make(map[string]string),
 	}
 }
 
 // Set добавляет значение в кеш по заданному ключу.
-func (c *SimpleCache) Set(key, value string) error {
-	c.data[key] = value
+func (c *simpleCache) Set(key, value string) error {
+	c.storage[key] = value
 	return nil
 }
 
 // Get возвращает значение из кеша по ключу.
-func (c *SimpleCache) Get(key string) (string, error) {
-	value, ok := c.data[key]
+func (c *simpleCache) Get(key string) (string, error) {
+	value, ok := c.storage[key]
 	if !ok {
 		return "", ErrNotFound
 	}
@@ -43,18 +43,18 @@ func (c *SimpleCache) Get(key string) (string, error) {
 }
 
 // Delete удаляет значение из кеша по ключу.
-func (c *SimpleCache) Delete(key string) error {
-	_, ok := c.data[key]
+func (c *simpleCache) Delete(key string) error {
+	_, ok := c.storage[key]
 	if !ok {
 		return ErrNotFound
 	}
-	delete(c.data, key)
+	delete(c.storage, key)
 	return nil
 }
 
 func main() {
 	// Создаем кеш
-	cache := NewSimpleCache()
+	cache := NewCache()
 
 	// Добавляем данные
 	cache.Set("name", "John Doe")
